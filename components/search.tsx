@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { useLocalSearchParams, usePathname, router } from 'expo-router';
-import {
-  Image,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDebouncedCallback } from 'use-debounce';
 
 import icons from '@/constants/icons';
