@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 
-import images from '@/constants/images';
 import icons from '@/constants/icons';
 
 import Search from '@/components/search';
@@ -66,7 +65,7 @@ export default function Index() {
               </View>
 
               <FlatList
-                data={[1, 2, 3]}
+                data={[5, 6, 7]}
                 renderItem={({ item }) => <FeaturedCard />}
                 keyExtractor={(item) => item.toString()}
                 horizontal
