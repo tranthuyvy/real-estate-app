@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -6,24 +7,63 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import icons from '@/constants/icons';
 
 import Search from '@/components/search';
 import Filters from '@/components/filter';
 import { Card, FeaturedCard } from '@/components/card';
+
+import { useAppwrite } from '@/lib/useAppwrite';
 import { useGlobalContext } from '@/lib/global-provider';
+import { getLatestProperties, getProperties } from '@/lib/appwrite';
 
 // ------------------------------------------------------------
 
 export default function Index() {
   const { user } = useGlobalContext();
 
+  const params = useLocalSearchParams<{ query?: string; filter?: string }>();
+
+  const { data: latestProperties, loading: latestPropertiesLoading } =
+    useAppwrite({
+      fn: getLatestProperties,
+    });
+
+  const {
+    data: properties,
+    loading,
+    refetch,
+  } = useAppwrite({
+    fn: getProperties,
+    params: {
+      filter: params.filter!,
+      query: params.query!,
+      limit: 6,
+    },
+    skip: true,
+  });
+
+  const handleCardPress = (id: string) => {
+    router.push(`/properties/${id}`);
+  };
+
+  useEffect(() => {
+    refetch({
+      filter: params.filter!,
+      query: params.query!,
+      limit: 6,
+    });
+  }, [params.filter, params.query]);
+
   return (
     <SafeAreaView className="bg-[#fff] h-full">
       <FlatList
-        data={[1, 2, 3, 4]}
-        renderItem={({ item }) => <Card />}
+        data={properties}
+        renderItem={({ item }) => (
+          <Card item={item} onPress={() => handleCardPress(item.$id)} />
+        )}
         keyExtractor={(item) => item.toString()}
         numColumns={2}
         contentContainerClassName="pb-32"
@@ -65,8 +105,13 @@ export default function Index() {
               </View>
 
               <FlatList
-                data={[5, 6, 7]}
-                renderItem={({ item }) => <FeaturedCard />}
+                data={latestProperties}
+                renderItem={({ item }) => (
+                  <FeaturedCard
+                    item={item}
+                    onPress={() => handleCardPress(item.$id)}
+                  />
+                )}
                 keyExtractor={(item) => item.toString()}
                 horizontal
                 bounces={false}
