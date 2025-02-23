@@ -11,6 +11,7 @@ import icons from '@/constants/icons';
 
 import Search from '@/components/search';
 import { Card, FeaturedCard } from '@/components/card';
+import Filters from '@/components/filter';
 
 // ------------------------------------------------------------
 
@@ -64,6 +65,8 @@ export default function Index() {
             </Text>
           </TouchableOpacity>
         </View>
+
+        <Filters />
 
         <View className="flex flex-row gap-5 mt-5">
           <Card />
